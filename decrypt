@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run -v ./keys:/app/keys --entrypoint python new_leaders_crypto main.py decrypt "$@" 2>&1 | grep -v WARNING

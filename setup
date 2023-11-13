@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+check_command() {
+    command
+    if [ $? -eq 0 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+docker build --rm -q --platform linux/amd64 -t new_leaders_crypto . 1> /dev/null
+
+echo "Do you wish to use the AWS Secrets Manager to store secrets used by this application?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes )
+          read -p "Please provide a unique name of the secrets manager entry for creation? " sm_name
+          SM_RESPONSE=$(aws secretsmanager describe-secret --secret-id $sm_name 2>&1)
+          if [[ $SM_RESPONSE == *"error"* ]]; then
+            SM_RESPONSE=$(aws secretsmanager create-secret --name $sm_name --description "New Leaders encryption secrets." --secret-string "{}")
+          fi
+          ARN=$(echo "${SM_RESPONSE}" | jq -r '.ARN' 2>&1)
+#          echo Found arn $ARN
+          docker run -v ~/.aws:/root/.aws -i -v ./keys:/app/keys --entrypoint python new_leaders_crypto generate_encryption_keys.py --secrets-manager-arn $ARN
+
+          break;;
+        No )
+          echo "Using file storage for all keys and secrets."
+            docker run -i -v ./keys:/app/keys --entrypoint python new_leaders_crypto generate_encryption_keys.py
+          break;;
+    esac
+done
+
