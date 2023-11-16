@@ -10,8 +10,8 @@ Prerequisite:
 - jq (https://jqlang.github.io/jq/)
 
 To run these applications you will need a modern linux / unix system.  We use docker to install all the python dependencies into a re-usable container. 
-Please make sure setup and all other commands are run on the same system.
-If using AWS a standard Amazon linux ec2 instance will be enough.  We recommend a minimum of a `T3 Nano` for these applications.
+Please make sure setup and all other commands are run on the same system. Please also ensure your docker service is started.  
+If using AWS a standard Amazon linux ec2 instance will be enough resources.  We recommend a minimum of a `T3 Nano` for these applications.
 
 ### Initial Setup
 1. Decide if you are going to use the AWS secrets manager or file based storage for storing your secrets.
@@ -43,6 +43,9 @@ To have the output redirected to another file use the command
 `./decrypt-csv encryptedfile.csv  > decryptedfile.csv`
  
 ## Developers
+If you are going to be making modifications to these applications as a developer please use the following for your workstation setup.  These steps are not needed
+for day to day use of the applications, only if you wish to make code changes.
+
 To rebuild the docker container with updated code run the following
 ```shell
 pipenv run pip freeze > requirements.txt
