@@ -13,7 +13,7 @@ from botocore.exceptions import ClientError
 def confirm():
     answer = ""
     while answer not in ["y", "n"]:
-        answer = input("Would you like to remove your encryption keys (if they exist) and generate new ones [Y/N]? ").lower()
+        answer = input("Would you like to remove your New Leaders crypto encryption keys (if they exist) and generate new ones (only New Leaders keys will be affected) [Y/N]? ").lower()
     return answer == "y"
 def get_secrets_manger_secret(secret_arn):
 
